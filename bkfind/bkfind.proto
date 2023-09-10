@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package bkfind;
+
+option go_package = "./bkfind";
+
+service Finder {
+    rpc FindBooks (BReq) returns (BReply) {}
+    rpc FindAuthor (AReq) returns (AReply) {}
+}
+
+message BReq {
+    string author = 1;
+}
+
+message BReply {
+    string books = 1;
+}
+
+message AReq {
+    string book = 1;
+}
+
+message AReply {
+    string author = 1;
+}
