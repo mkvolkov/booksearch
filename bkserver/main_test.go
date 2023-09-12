@@ -85,14 +85,14 @@ func Test_QueryBooks(t *testing.T) {
 	}
 }
 
-func Test_QueryAuthor(t *testing.T) {
+func Test_QueryAuthors(t *testing.T) {
 	tests := []struct {
-		title          string
-		expectedAuthor []Name
+		title           string
+		expectedAuthors []Name
 	}{
 		{
 			title: "%Онегин%",
-			expectedAuthor: []Name{
+			expectedAuthors: []Name{
 				{
 					Name: "Пушкин А.С.",
 				},
@@ -100,7 +100,7 @@ func Test_QueryAuthor(t *testing.T) {
 		},
 		{
 			title: "%Бульба%",
-			expectedAuthor: []Name{
+			expectedAuthors: []Name{
 				{
 					Name: "Гоголь Н.В.",
 				},
@@ -108,9 +108,20 @@ func Test_QueryAuthor(t *testing.T) {
 		},
 		{
 			title: "%Преступление и наказание%",
-			expectedAuthor: []Name{
+			expectedAuthors: []Name{
 				{
 					Name: "Достоевский Ф.М.",
+				},
+			},
+		},
+		{
+			title: "%Золотой телёнок%",
+			expectedAuthors: []Name{
+				{
+					Name: "Ильф И.А.",
+				},
+				{
+					Name: "Петров Е.П.",
 				},
 			},
 		},
@@ -127,7 +138,7 @@ func Test_QueryAuthor(t *testing.T) {
 
 	for _, tc := range tests {
 		var rows = sqlmock.NewRows([]string{`name`})
-		for _, author := range tc.expectedAuthor {
+		for _, author := range tc.expectedAuthors {
 			rows.AddRow(author.Name)
 		}
 
@@ -137,7 +148,7 @@ func Test_QueryAuthor(t *testing.T) {
 			WillReturnRows(rows)
 
 		data, err := Dbase.GetAuthor(tc.title)
-		if !reflect.DeepEqual(data, tc.expectedAuthor) {
+		if !reflect.DeepEqual(data, tc.expectedAuthors) {
 			t.Error("Wrong data")
 		}
 
