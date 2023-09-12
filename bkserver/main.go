@@ -29,15 +29,16 @@ type Db struct {
 // по имени "Достоевский"
 var queryBooks string = `SELECT title
 	FROM authors
-	JOIN books ON authors.id = books.author
+	JOIN indexes ON authors.author_id = indexes.author
+	JOIN books ON books.book_id = indexes.book
 	WHERE name LIKE ?`
 
 // запрос: поиск автора по книге
 // название книги не обязано полностью совпадать с названием в таблице
-// считается, что автор один
-var queryAuthor string = `SELECT name
+var queryAuthors string = `SELECT name
 	FROM authors
-	JOIN books ON authors.id = books.author
+	JOIN indexes ON authors.author_id = indexes.author
+	JOIN books ON books.book_id = indexes.book
 	WHERE title LIKE ?`
 
 // вспомогательный метод, исполняющий запрос "поиск книг по автору"
@@ -54,7 +55,7 @@ func (db *Db) GetBooks(name string) ([]Title, error) {
 // вспомогательный метод, исполняющий запрос "поиск автора по книге"
 func (db *Db) GetAuthor(title string) ([]Name, error) {
 	var data []Name
-	err := db.dbase.Select(&data, queryAuthor, title)
+	err := db.dbase.Select(&data, queryAuthors, title)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +103,7 @@ func (s *server) FindBooks(ctx context.Context, msg *grbook.BReq) (*grbook.BRepl
 // служба gRPC: поиск автора по книге
 // функция получает автора в виде списка из одного элемента
 // возвращает строку
-func (s *server) FindAuthor(ctx context.Context, msg *grbook.AReq) (*grbook.AReply, error) {
+func (s *server) FindAuthors(ctx context.Context, msg *grbook.AReq) (*grbook.AReply, error) {
 	var arg string = msg.GetBook()
 
 	log.Printf("Req type: Get Author, book: %s\n", arg)
@@ -115,14 +116,21 @@ func (s *server) FindAuthor(ctx context.Context, msg *grbook.AReq) (*grbook.ARep
 		log.Fatalln(err)
 	}
 
+	/*
+		var resp string
+		if len(data) == 0 {
+			resp = ""
+		} else {
+			resp = data[0].Name + string('\n')
+		}
+	*/
+
 	var resp string
-	if len(data) == 0 {
-		resp = ""
-	} else {
-		resp = data[0].Name + string('\n')
+	for i := 0; i < len(data); i++ {
+		resp += data[i].Name + string('\n')
 	}
 
-	return &grbook.AReply{Author: resp}, nil
+	return &grbook.AReply{Authors: resp}, nil
 }
 
 func InitDB(cfg *cfg.Cfg) (*sqlx.DB, error) {

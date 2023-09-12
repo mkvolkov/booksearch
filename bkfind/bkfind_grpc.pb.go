@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FinderClient interface {
 	FindBooks(ctx context.Context, in *BReq, opts ...grpc.CallOption) (*BReply, error)
-	FindAuthor(ctx context.Context, in *AReq, opts ...grpc.CallOption) (*AReply, error)
+	FindAuthors(ctx context.Context, in *AReq, opts ...grpc.CallOption) (*AReply, error)
 }
 
 type finderClient struct {
@@ -43,9 +43,9 @@ func (c *finderClient) FindBooks(ctx context.Context, in *BReq, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *finderClient) FindAuthor(ctx context.Context, in *AReq, opts ...grpc.CallOption) (*AReply, error) {
+func (c *finderClient) FindAuthors(ctx context.Context, in *AReq, opts ...grpc.CallOption) (*AReply, error) {
 	out := new(AReply)
-	err := c.cc.Invoke(ctx, "/bkfind.Finder/FindAuthor", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/bkfind.Finder/FindAuthors", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *finderClient) FindAuthor(ctx context.Context, in *AReq, opts ...grpc.Ca
 // for forward compatibility
 type FinderServer interface {
 	FindBooks(context.Context, *BReq) (*BReply, error)
-	FindAuthor(context.Context, *AReq) (*AReply, error)
+	FindAuthors(context.Context, *AReq) (*AReply, error)
 	mustEmbedUnimplementedFinderServer()
 }
 
@@ -68,8 +68,8 @@ type UnimplementedFinderServer struct {
 func (UnimplementedFinderServer) FindBooks(context.Context, *BReq) (*BReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindBooks not implemented")
 }
-func (UnimplementedFinderServer) FindAuthor(context.Context, *AReq) (*AReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FindAuthor not implemented")
+func (UnimplementedFinderServer) FindAuthors(context.Context, *AReq) (*AReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindAuthors not implemented")
 }
 func (UnimplementedFinderServer) mustEmbedUnimplementedFinderServer() {}
 
@@ -102,20 +102,20 @@ func _Finder_FindBooks_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Finder_FindAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Finder_FindAuthors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FinderServer).FindAuthor(ctx, in)
+		return srv.(FinderServer).FindAuthors(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/bkfind.Finder/FindAuthor",
+		FullMethod: "/bkfind.Finder/FindAuthors",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FinderServer).FindAuthor(ctx, req.(*AReq))
+		return srv.(FinderServer).FindAuthors(ctx, req.(*AReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,8 +132,8 @@ var Finder_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Finder_FindBooks_Handler,
 		},
 		{
-			MethodName: "FindAuthor",
-			Handler:    _Finder_FindAuthor_Handler,
+			MethodName: "FindAuthors",
+			Handler:    _Finder_FindAuthors_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

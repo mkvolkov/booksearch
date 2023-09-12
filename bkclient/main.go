@@ -51,10 +51,10 @@ func main() {
 	}
 
 	if *book != "" {
-		resp, err := client.FindAuthor(ctx, &grbook.AReq{Book: *book})
+		resp, err := client.FindAuthors(ctx, &grbook.AReq{Book: *book})
 		if err != nil {
 			log.Fatalf("could not acquire: %v", err)
 		}
-		fmt.Printf("%s", resp.GetAuthor())
+		fmt.Printf("%s", resp.GetAuthors())
 	}
 }

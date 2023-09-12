@@ -6,7 +6,7 @@ option go_package = "./bkfind";
 
 service Finder {
     rpc FindBooks (BReq) returns (BReply) {}
-    rpc FindAuthor (AReq) returns (AReply) {}
+    rpc FindAuthors (AReq) returns (AReply) {}
 }
 
 message BReq {
@@ -22,5 +22,5 @@ message AReq {
 }
 
 message AReply {
-    string author = 1;
+    string authors = 1;
 }

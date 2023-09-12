@@ -23,10 +23,10 @@ DROP TABLE IF EXISTS `authors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `authors` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `author_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`author_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,7 @@ CREATE TABLE `authors` (
 
 LOCK TABLES `authors` WRITE;
 /*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES (1,'Пушкин А.С.'),(2,'Гоголь Н.В.'),(3,'Достоевский Ф.М.'),(4,'Толстой Л.Н.');
+INSERT INTO `authors` VALUES (1,'Пушкин А.С.'),(2,'Гоголь Н.В.'),(3,'Достоевский Ф.М.'),(4,'Толстой Л.Н.'),(5,'Ильф И.А.'),(6,'Петров Е.П.');
 /*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -47,13 +47,10 @@ DROP TABLE IF EXISTS `books`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `books` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `book_id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `author` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `author` (`author`),
-  CONSTRAINT `books_ibfk_1` FOREIGN KEY (`author`) REFERENCES `authors` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`book_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,8 +59,37 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'Евгений Онегин',1),(2,'Тарас Бульба',2),(3,'Ночь перед Рождеством',2),(4,'Преступление и наказание',3),(5,'Игрок',3),(6,'Идиот',3),(7,'Война и мир',4),(8,'Анна Каренина',4);
+INSERT INTO `books` VALUES (1,'Евгений Онегин'),(2,'Тарас Бульба'),(3,'Ночь перед Рождеством'),(4,'Преступление и наказание'),(5,'Игрок'),(6,'Идиот'),(7,'Война и мир'),(8,'Анна Каренина'),(9,'Двенадцать стульев'),(10,'Золотой телёнок');
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `indexes`
+--
+
+DROP TABLE IF EXISTS `indexes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `indexes` (
+  `index_id` int NOT NULL AUTO_INCREMENT,
+  `author` int DEFAULT NULL,
+  `book` int DEFAULT NULL,
+  PRIMARY KEY (`index_id`),
+  KEY `author` (`author`),
+  KEY `book` (`book`),
+  CONSTRAINT `indexes_ibfk_1` FOREIGN KEY (`author`) REFERENCES `authors` (`author_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `indexes_ibfk_2` FOREIGN KEY (`book`) REFERENCES `books` (`book_id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `indexes`
+--
+
+LOCK TABLES `indexes` WRITE;
+/*!40000 ALTER TABLE `indexes` DISABLE KEYS */;
+INSERT INTO `indexes` VALUES (1,1,1),(2,2,2),(3,2,3),(4,3,4),(5,3,5),(6,3,6),(7,4,7),(8,4,8),(9,5,9),(10,5,10),(11,6,9),(12,6,10);
+/*!40000 ALTER TABLE `indexes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -75,4 +101,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-10  7:27:52
+-- Dump completed on 2023-09-12 19:49:19

@@ -132,7 +132,7 @@ func Test_QueryAuthor(t *testing.T) {
 		}
 
 		mock.
-			ExpectQuery(queryAuthor).
+			ExpectQuery(queryAuthors).
 			WithArgs(tc.title).
 			WillReturnRows(rows)
 
